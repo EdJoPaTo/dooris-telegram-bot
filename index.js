@@ -7,10 +7,15 @@ const { Extra, Markup } = Telegraf
 const token = fs.readFileSync(process.env.npm_package_config_tokenpath, 'utf8').trim()
 const bot = new Telegraf(token)
 
+let statusCache = {}
+let statusTimestamp = 0
 async function doorisStatus() {
-  const response = JSON.parse(await request('https://www.hamburg.ccc.de/dooris/status.json'))
-
-  return response
+  const age = (Date.now() - statusTimestamp) / 1000
+  if (age > 60) { // older than 60 seconds
+    statusTimestamp = Date.now()
+    statusCache = JSON.parse(await request('https://www.hamburg.ccc.de/dooris/status.json'))
+  }
+  return statusCache
 }
 
 function statusString(status) {
