@@ -1,0 +1,9 @@
+.*
+Dockerfile
+install.sh
+node_modules
+README.md
+
+# botfiles
+botfather-settings
+token.txt

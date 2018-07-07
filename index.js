@@ -4,7 +4,8 @@ const Telegraf = require('telegraf')
 
 const { Extra, Markup } = Telegraf
 
-const token = fs.readFileSync(process.env.npm_package_config_tokenpath, 'utf8').trim()
+const tokenFilePath = process.env.NODE_ENV === 'production' ? process.env.npm_package_config_tokenpath : process.env.npm_package_config_tokenpathdebug
+const token = fs.readFileSync(tokenFilePath, 'utf8').trim()
 const bot = new Telegraf(token)
 
 let statusCache = {}

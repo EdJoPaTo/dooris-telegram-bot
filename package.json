@@ -23,7 +23,8 @@
     "test": "npm run eslint"
   },
   "config": {
-    "tokenpath": "token.txt"
+    "tokenpath": "/run/secrets/doorisbot-token.txt",
+    "tokenpathdebug": "token.txt"
   },
   "license": "MIT"
 }
