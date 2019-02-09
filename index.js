@@ -16,6 +16,7 @@ async function doorisStatus() {
     statusTimestamp = Date.now()
     statusCache = JSON.parse(await request('https://www.hamburg.ccc.de/dooris/status.json'))
   }
+
   return statusCache
 }
 
@@ -27,6 +28,7 @@ function statusString(status) {
   if (open) {
     return `Die Tür ist seit ${ageString} offen. 🙃`
   }
+
   return `Die Tür ist seit ${ageString} geschlossen. 😔`
 }
 
@@ -36,12 +38,15 @@ function formatAge(ageInSeconds) {
     if (minutes === 1) {
       return 'einer Minute'
     }
+
     return `${minutes} Minuten`
   }
+
   const hours = Math.floor(ageInSeconds / (60 * 60))
   if (hours === 1) {
     return 'einer Stunde'
   }
+
   return `${hours} Stunden`
 }
 
@@ -100,6 +105,7 @@ bot.catch(error => {
   if (error.description === 'Bad Request: message is not modified') {
     return
   }
+
   console.error(error)
 })
 
