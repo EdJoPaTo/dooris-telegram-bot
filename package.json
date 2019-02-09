@@ -7,10 +7,10 @@
   "dependencies": {
     "request": "^2.87.0",
     "request-promise-native": "^1.0.5",
-    "telegraf": "^3.21.2"
+    "telegraf": "^3.27.1"
   },
   "devDependencies": {
-    "xo": "^0.23.0"
+    "xo": "^0.24.0"
   },
   "scripts": {
     "xo": "xo",
