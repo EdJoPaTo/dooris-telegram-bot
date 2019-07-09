@@ -1,7 +1,4 @@
-token.txt
-chats.json
-data/
-tmp/
+bot-token.txt
 
 # node
 node_modules

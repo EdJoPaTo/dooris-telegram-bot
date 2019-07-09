@@ -1,11 +1,12 @@
-const fs = require('fs')
+const {existsSync, readFileSync} = require('fs')
+
 const request = require('request-promise-native')
 const Telegraf = require('telegraf')
 
 const {Extra, Markup} = Telegraf
 
-const tokenFilePath = process.env.NODE_ENV === 'production' ? process.env.npm_package_config_tokenpath : process.env.npm_package_config_tokenpathdebug
-const token = fs.readFileSync(tokenFilePath, 'utf8').trim()
+const tokenFilePath = existsSync('/run/secrets') ? '/run/secrets/bot-token.txt' : 'bot-token.txt'
+const token = readFileSync(tokenFilePath, 'utf8').trim()
 const bot = new Telegraf(token)
 
 let statusCache = {}
