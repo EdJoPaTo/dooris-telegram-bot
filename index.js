@@ -103,7 +103,7 @@ bot.on('channel_post', async ctx => {
 })
 
 bot.catch(error => {
-  if (error.description === 'Bad Request: message is not modified') {
+  if (error.message.startsWith('400: Bad Request: message is not modified')) {
     return
   }
 
