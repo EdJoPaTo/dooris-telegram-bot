@@ -1,7 +1,7 @@
 const {existsSync, readFileSync} = require('fs')
 
-const request = require('request-promise-native')
-const Telegraf = require('telegraf')
+const {Telegraf} = require('telegraf')
+const got = require('got')
 
 const {Extra, Markup} = Telegraf
 
@@ -15,7 +15,7 @@ async function doorisStatus() {
   const age = (Date.now() - statusTimestamp) / 1000
   if (age > 60) { // Older than 60 seconds
     statusTimestamp = Date.now()
-    statusCache = JSON.parse(await request('https://www.hamburg.ccc.de/dooris/status.json'))
+    statusCache = await got('https://www.hamburg.ccc.de/dooris/status.json').json()
   }
 
   return statusCache
@@ -110,4 +110,14 @@ bot.catch(error => {
   console.error(error)
 })
 
-bot.startPolling()
+async function startup() {
+  await bot.telegram.setMyCommands([
+    {command: 'door', description: 'Zustand der Tür'},
+    {command: 'where', description: 'Wo ist besagte Tür?'}
+  ])
+
+  await bot.launch()
+  console.log(new Date(), 'Bot started as', bot.options.username)
+}
+
+startup()

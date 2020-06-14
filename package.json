@@ -5,15 +5,13 @@
     "node": ">=12"
   },
   "dependencies": {
-    "request": "^2.87.0",
-    "request-promise-native": "^1.0.5",
-    "telegraf": "^3.27.1"
+    "got": "^11.3.0",
+    "telegraf": "^3.38.0"
   },
   "devDependencies": {
-    "xo": "^0.24.0"
+    "xo": "^0.32.0"
   },
   "scripts": {
-    "xo": "xo",
     "start": "node index.js",
     "test": "xo"
   },

@@ -1,2 +1,0 @@
-door - Zustand der Tür
-where - Wo ist besagte Tür?
