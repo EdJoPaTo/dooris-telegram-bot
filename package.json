@@ -9,7 +9,7 @@
     "telegraf": "^3.38.0"
   },
   "devDependencies": {
-    "xo": "^0.33.1"
+    "xo": "^0.34.0"
   },
   "scripts": {
     "start": "node index.js",
