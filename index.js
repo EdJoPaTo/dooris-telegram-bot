@@ -1,14 +1,17 @@
 const {existsSync, readFileSync} = require('fs')
 
-const {Telegraf} = require('telegraf')
+const {Telegraf, Markup} = require('telegraf')
 const got = require('got')
-
-const {Extra, Markup} = Telegraf
 
 process.title = 'dooris-tgbot'
 
-const tokenFilePath = existsSync('/run/secrets') ? '/run/secrets/bot-token.txt' : 'bot-token.txt'
-const token = readFileSync(tokenFilePath, 'utf8').trim()
+const token = (existsSync('/run/secrets/bot-token.txt') && readFileSync('/run/secrets/bot-token.txt', 'utf8').trim()) ||
+	(existsSync('bot-token.txt') && readFileSync('bot-token.txt', 'utf8').trim()) ||
+	process.env.BOT_TOKEN
+if (!token) {
+  throw new Error('You have to provide the bot-token from @BotFather via file (bot-token.txt) or environment variable (BOT_TOKEN)')
+}
+
 const bot = new Telegraf(token)
 
 let statusCache = {}
@@ -54,7 +57,7 @@ function formatAge(ageInSeconds) {
 }
 
 bot.command('start', ctx => {
-  return ctx.reply(`Hey ${ctx.from.first_name}!\nBenutze /door für den aktuellen Zustand.\nWenn du Anderen den Zustand der Tür zeigen willst, schreibe in jedem beliebigen Telegram Chat \`@doorisbot\` und wähle den Türzustand. (Die Textzeile darf nichts anderes als \`@doorisbot\` beinhalten)`, Extra.markdown())
+  return ctx.reply(`Hey ${ctx.from.first_name}!\nBenutze /door für den aktuellen Zustand.\nWenn du Anderen den Zustand der Tür zeigen willst, schreibe in jedem beliebigen Telegram Chat \`@doorisbot\` und wähle den Türzustand. (Die Textzeile darf nichts anderes als \`@doorisbot\` beinhalten)`, {parse_mode: 'Markdown'})
 })
 
 bot.command('door', async ctx => ctx.reply(statusString(await doorisStatus())))
@@ -66,7 +69,7 @@ bot.command('where', async ctx => {
 })
 
 const updateKeyboard = Markup.inlineKeyboard([
-  Markup.callbackButton('update', 'update')
+  Markup.button.callback('update', 'update')
 ])
 
 bot.on('inline_query', async ctx => {
@@ -80,7 +83,7 @@ bot.on('inline_query', async ctx => {
     input_message_content: {
       message_text: statusString(status)
     },
-    reply_markup: updateKeyboard
+    ...updateKeyboard
   })
 
   return ctx.answerInlineQuery(results, {
@@ -93,7 +96,7 @@ bot.action('update', async ctx => {
   const text = statusString(status)
 
   return Promise.all([
-    ctx.editMessageText(text, Extra.markup(updateKeyboard)),
+    ctx.editMessageText(text, updateKeyboard),
     ctx.answerCbQuery('updated 😘')
   ])
 })
@@ -119,7 +122,7 @@ async function startup() {
   ])
 
   await bot.launch()
-  console.log(new Date(), 'Bot started as', bot.options.username)
+  console.log(new Date(), 'Bot started as', bot.botInfo?.username)
 }
 
 startup()
