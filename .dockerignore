@@ -1,9 +1,12 @@
 .*
+*.md
+**/*.test.*
+botfather-settings
+dist
 Dockerfile
-install.sh
 node_modules
-README.md
+test
 
 # botfiles
-botfather-settings
 bot-token.txt
+persist
