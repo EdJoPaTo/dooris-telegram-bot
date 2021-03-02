@@ -71,7 +71,7 @@ function formatAge(ageInSeconds: number) {
 
 bot.command('start', async ctx => {
 	return ctx.reply(
-		`Hey ${ctx.from!.first_name}!
+		`Hey ${ctx.from.first_name}!
 Benutze /door für den aktuellen Zustand.
 Wenn du Anderen den Zustand der Tür zeigen willst, schreibe in jedem beliebigen Telegram Chat \`@${ctx.botInfo.username}\` und wähle den Türzustand. (Die Textzeile darf nichts anderes als \`@${ctx.botInfo.username}\` beinhalten)`,
 		{parse_mode: 'Markdown'}
