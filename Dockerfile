@@ -13,7 +13,6 @@ RUN rm -rf node_modules && \
 
 FROM docker.io/library/node:14-alpine
 WORKDIR /app
-VOLUME /app/persist
 
 ENV NODE_ENV=production
 
