@@ -1,7 +1,5 @@
-import {existsSync, readFileSync} from 'fs';
-
-import {InlineQueryResultArticle} from 'typegram';
-import {Telegraf, Markup} from 'telegraf';
+import {Bot, InlineKeyboard} from 'grammy';
+import {InlineQueryResultArticle} from 'grammy/out/platform';
 import got from 'got';
 
 interface DoorStatusResult {
@@ -18,14 +16,12 @@ interface DoorStatusResult {
 
 process.title = 'dooris-tgbot';
 
-const token = (existsSync('/run/secrets/bot-token.txt') && readFileSync('/run/secrets/bot-token.txt', 'utf8').trim()) ||
-	(existsSync('bot-token.txt') && readFileSync('bot-token.txt', 'utf8').trim()) ||
-	process.env['BOT_TOKEN'];
+const token = process.env['BOT_TOKEN'];
 if (!token) {
-	throw new Error('You have to provide the bot-token from @BotFather via file (bot-token.txt) or environment variable (BOT_TOKEN)');
+	throw new Error('You have to provide the bot-token from @BotFather via environment variable (BOT_TOKEN)');
 }
 
-const bot = new Telegraf(token);
+const bot = new Bot(token);
 
 let statusCache: DoorStatusResult;
 let statusTimestamp = 0;
@@ -71,9 +67,9 @@ function formatAge(ageInSeconds: number) {
 
 bot.command('start', async ctx => {
 	return ctx.reply(
-		`Hey ${ctx.from.first_name}!
+		`Hey ${ctx.from!.first_name}!
 Benutze /door für den aktuellen Zustand.
-Wenn du Anderen den Zustand der Tür zeigen willst, schreibe in jedem beliebigen Telegram Chat \`@${ctx.botInfo.username}\` und wähle den Türzustand. (Die Textzeile darf nichts anderes als \`@${ctx.botInfo.username}\` beinhalten)`,
+Wenn du Anderen den Zustand der Tür zeigen willst, schreibe in jedem beliebigen Telegram Chat \`@${username}\` und wähle den Türzustand. (Die Textzeile darf nichts anderes als \`@${username}\` beinhalten)`,
 		{parse_mode: 'Markdown'}
 	);
 });
@@ -83,13 +79,10 @@ bot.command('door', async ctx => ctx.reply(statusString(await doorisStatus())));
 bot.command('where', async ctx => {
 	const status = await doorisStatus();
 	const {lon, lat, address} = status.location;
-	// TODO: extra is optional... remove when typigns are fixed
-	return ctx.replyWithVenue(lat, lon, 'CCC Hamburg', address, {});
+	return ctx.replyWithVenue(lat, lon, 'CCC Hamburg', address);
 });
 
-const updateKeyboard = Markup.inlineKeyboard([
-	Markup.button.callback('update', 'update')
-]);
+const updateKeyboard = new InlineKeyboard().text('update', 'update');
 
 bot.on('inline_query', async ctx => {
 	const results: InlineQueryResultArticle[] = [];
@@ -102,7 +95,7 @@ bot.on('inline_query', async ctx => {
 		input_message_content: {
 			message_text: statusString(status)
 		},
-		...updateKeyboard
+		reply_markup: updateKeyboard
 	});
 
 	return ctx.answerInlineQuery(results, {
@@ -110,13 +103,13 @@ bot.on('inline_query', async ctx => {
 	});
 });
 
-bot.action('update', async ctx => {
+bot.callbackQuery('update', async ctx => {
 	const status = await doorisStatus();
 	const text = statusString(status);
 
 	return Promise.all([
-		ctx.editMessageText(text, updateKeyboard),
-		ctx.answerCbQuery('updated 😘')
+		ctx.editMessageText(text, {reply_markup: updateKeyboard}),
+		ctx.answerCallbackQuery({text: 'updated 😘'})
 	]);
 });
 
@@ -134,14 +127,17 @@ bot.catch(error => {
 	console.error(error);
 });
 
+let username: string;
+
 async function startup() {
-	await bot.telegram.setMyCommands([
+	await bot.api.setMyCommands([
 		{command: 'door', description: 'Zustand der Tür'},
 		{command: 'where', description: 'Wo ist besagte Tür?'}
 	]);
 
-	await bot.launch();
-	console.log(new Date(), 'Bot started as', bot.botInfo?.username);
+	username = (await bot.api.getMe()).username;
+	console.log(new Date(), 'Bot starts as', username);
+	await bot.start();
 }
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
