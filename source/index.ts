@@ -107,24 +107,23 @@ bot.callbackQuery('update', async ctx => {
 	const status = await doorisStatus();
 	const text = statusString(status);
 
-	return Promise.all([
-		ctx.editMessageText(text, {reply_markup: updateKeyboard}),
-		ctx.answerCallbackQuery({text: 'updated 😘'})
-	]);
+	try {
+		await ctx.editMessageText(text, {reply_markup: updateKeyboard});
+	} catch (error: unknown) {
+		if (error instanceof Error && error.message.includes('message is not modified')) {
+			// Ignore
+		} else {
+			throw error;
+		}
+	}
+
+	return ctx.answerCallbackQuery({text: 'updated 😘'});
 });
 
 bot.on('channel_post', async ctx => {
 	await ctx.reply('Adding a random bot as an admin to your channel is maybe not the best idea…\n\nSincerely, a random bot, added as an admin to this channel.');
 	console.log('leave the channel…', ctx.chat);
 	return ctx.leaveChat();
-});
-
-bot.catch(error => {
-	if (error instanceof Error && error.message.includes('message is not modified')) {
-		return;
-	}
-
-	console.error(error);
 });
 
 let username: string;
