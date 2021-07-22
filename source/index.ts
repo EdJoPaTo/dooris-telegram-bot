@@ -65,14 +65,12 @@ function formatAge(ageInSeconds: number) {
 	return `${hours} Stunden`;
 }
 
-bot.command('start', async ctx => {
-	return ctx.reply(
-		`Hey ${ctx.from!.first_name}!
+bot.command('start', async ctx => ctx.reply(
+	`Hey ${ctx.from!.first_name}!
 Benutze /door für den aktuellen Zustand.
 Wenn du Anderen den Zustand der Tür zeigen willst, schreibe in jedem beliebigen Telegram Chat \`@${username}\` und wähle den Türzustand. (Die Textzeile darf nichts anderes als \`@${username}\` beinhalten)`,
-		{parse_mode: 'Markdown'}
-	);
-});
+	{parse_mode: 'Markdown'},
+));
 
 bot.command('door', async ctx => ctx.reply(statusString(await doorisStatus())));
 
@@ -93,13 +91,13 @@ bot.on('inline_query', async ctx => {
 		id: String(status.state.open),
 		title: `Die Tür ist ${status.state.open ? 'offen' : 'zu'}`,
 		input_message_content: {
-			message_text: statusString(status)
+			message_text: statusString(status),
 		},
-		reply_markup: updateKeyboard
+		reply_markup: updateKeyboard,
 	});
 
 	return ctx.answerInlineQuery(results, {
-		cache_time: 120 // 120 seconds -> 2 minutes
+		cache_time: 120, // 120 seconds -> 2 minutes
 	});
 });
 
@@ -131,7 +129,7 @@ let username: string;
 async function startup() {
 	await bot.api.setMyCommands([
 		{command: 'door', description: 'Zustand der Tür'},
-		{command: 'where', description: 'Wo ist besagte Tür?'}
+		{command: 'where', description: 'Wo ist besagte Tür?'},
 	]);
 
 	username = (await bot.api.getMe()).username;
