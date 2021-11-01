@@ -1,5 +1,5 @@
 import {Bot, InlineKeyboard} from 'grammy';
-import {InlineQueryResultArticle} from 'grammy/out/platform';
+import {InlineQueryResultArticle} from '@grammyjs/types';
 import got from 'got';
 
 interface DoorStatusResult {
