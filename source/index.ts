@@ -1,4 +1,5 @@
 import {Bot, InlineKeyboard} from 'grammy';
+import {generateUpdateMiddleware} from 'telegraf-middleware-console-time/dist';
 import {InlineQueryResultArticle} from '@grammyjs/types';
 import got from 'got';
 
@@ -22,6 +23,8 @@ if (!token) {
 }
 
 const bot = new Bot(token);
+
+bot.use(generateUpdateMiddleware());
 
 let statusCache: DoorStatusResult;
 let statusTimestamp = 0;
