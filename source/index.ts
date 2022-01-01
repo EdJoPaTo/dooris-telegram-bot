@@ -132,9 +132,12 @@ async function startup() {
 		{command: 'where', description: 'Wo ist besagte Tür?'},
 	]);
 
-	username = (await bot.api.getMe()).username;
-	console.log(new Date(), 'Bot starts as', username);
-	await bot.start();
+	await bot.start({
+		onStart: botInfo => {
+			username = botInfo.username;
+			console.log(new Date(), 'Bot starts as', botInfo.username);
+		},
+	});
 }
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
