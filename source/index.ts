@@ -1,5 +1,5 @@
 import {Bot, InlineKeyboard} from 'grammy';
-import {generateUpdateMiddleware} from 'telegraf-middleware-console-time/dist';
+import {generateUpdateMiddleware} from 'telegraf-middleware-console-time';
 import {InlineQueryResultArticle} from '@grammyjs/types';
 import got from 'got';
 
