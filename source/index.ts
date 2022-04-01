@@ -136,7 +136,7 @@ async function startup() {
 	]);
 
 	await bot.start({
-		onStart: botInfo => {
+		onStart(botInfo) {
 			username = botInfo.username;
 			console.log(new Date(), 'Bot starts as', botInfo.username);
 		},
