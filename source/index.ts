@@ -1,6 +1,6 @@
 import {Bot, InlineKeyboard} from 'grammy';
 import {generateUpdateMiddleware} from 'telegraf-middleware-console-time';
-import {InlineQueryResultArticle} from '@grammyjs/types';
+import {InlineQueryResultArticle} from 'grammy/types';
 import got from 'got';
 
 interface DoorStatusResult {
