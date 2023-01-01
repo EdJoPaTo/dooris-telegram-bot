@@ -1,7 +1,6 @@
 import {Bot, InlineKeyboard} from 'grammy';
 import {generateUpdateMiddleware} from 'telegraf-middleware-console-time';
 import {InlineQueryResultArticle} from 'grammy/types';
-import got from 'got';
 
 interface DoorStatusResult {
 	readonly state: {
@@ -32,7 +31,10 @@ async function doorisStatus(): Promise<DoorStatusResult> {
 	const age = (Date.now() - statusTimestamp) / 1000;
 	if (age > 60) { // Older than 60 seconds
 		statusTimestamp = Date.now();
-		statusCache = await got('https://www.hamburg.ccc.de/dooris/status.json').json();
+		const response = await fetch(
+			'https://www.hamburg.ccc.de/dooris/status.json',
+		);
+		statusCache = await response.json();
 	}
 
 	return statusCache;
