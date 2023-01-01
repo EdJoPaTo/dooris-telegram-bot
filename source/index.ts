@@ -1,8 +1,8 @@
 import {Bot, InlineKeyboard} from 'grammy';
 import {generateUpdateMiddleware} from 'telegraf-middleware-console-time';
-import {InlineQueryResultArticle} from 'grammy/types';
+import type {InlineQueryResultArticle} from 'grammy/types';
 
-interface DoorStatusResult {
+type DoorStatusResult = {
 	readonly state: {
 		readonly open: boolean;
 		readonly lastchange: number;
@@ -12,13 +12,15 @@ interface DoorStatusResult {
 		readonly lat: number;
 		readonly address: string;
 	};
-}
+};
 
 process.title = 'dooris-tgbot';
 
 const token = process.env['BOT_TOKEN'];
 if (!token) {
-	throw new Error('You have to provide the bot-token from @BotFather via environment variable (BOT_TOKEN)');
+	throw new Error(
+		'You have to provide the bot-token from @BotFather via environment variable (BOT_TOKEN)',
+	);
 }
 
 const bot = new Bot(token);
@@ -70,14 +72,18 @@ function formatAge(ageInSeconds: number) {
 	return `${hours} Stunden`;
 }
 
-bot.command('start', async ctx => ctx.reply(
-	`Hey ${ctx.from!.first_name}!
+bot.command('start', async ctx =>
+	ctx.reply(
+		`Hey ${ctx.from!.first_name}!
 Benutze /door für den aktuellen Zustand.
 Wenn du Anderen den Zustand der Tür zeigen willst, schreibe in jedem beliebigen Telegram Chat \`@${username}\` und wähle den Türzustand. (Die Textzeile darf nichts anderes als \`@${username}\` beinhalten)`,
-	{parse_mode: 'Markdown'},
-));
+		{parse_mode: 'Markdown'},
+	));
 
-bot.command('door', async ctx => ctx.reply(statusString(await doorisStatus())));
+bot.command(
+	'door',
+	async ctx => ctx.reply(statusString(await doorisStatus())),
+);
 
 bot.command('where', async ctx => {
 	const status = await doorisStatus();
@@ -113,7 +119,10 @@ bot.callbackQuery('update', async ctx => {
 	try {
 		await ctx.editMessageText(text, {reply_markup: updateKeyboard});
 	} catch (error: unknown) {
-		if (error instanceof Error && error.message.includes('message is not modified')) {
+		if (
+			error instanceof Error
+			&& error.message.includes('message is not modified')
+		) {
 			// Ignore
 		} else {
 			throw error;
@@ -124,26 +133,23 @@ bot.callbackQuery('update', async ctx => {
 });
 
 bot.on('channel_post', async ctx => {
-	await ctx.reply('Adding a random bot as an admin to your channel is maybe not the best idea…\n\nSincerely, a random bot, added as an admin to this channel.');
+	await ctx.reply(
+		'Adding a random bot as an admin to your channel is maybe not the best idea…\n\nSincerely, a random bot, added as an admin to this channel.',
+	);
 	console.log('leave the channel…', ctx.chat);
 	return ctx.leaveChat();
 });
 
 let username: string;
 
-async function startup() {
-	await bot.api.setMyCommands([
-		{command: 'door', description: 'Zustand der Tür'},
-		{command: 'where', description: 'Wo ist besagte Tür?'},
-	]);
+await bot.api.setMyCommands([
+	{command: 'door', description: 'Zustand der Tür'},
+	{command: 'where', description: 'Wo ist besagte Tür?'},
+]);
 
-	await bot.start({
-		onStart(botInfo) {
-			username = botInfo.username;
-			console.log(new Date(), 'Bot starts as', botInfo.username);
-		},
-	});
-}
-
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-startup();
+await bot.start({
+	onStart(botInfo) {
+		username = botInfo.username;
+		console.log(new Date(), 'Bot starts as', botInfo.username);
+	},
+});
