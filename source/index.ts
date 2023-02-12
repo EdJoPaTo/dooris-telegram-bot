@@ -36,7 +36,7 @@ async function doorisStatus(): Promise<DoorStatusResult> {
 		const response = await fetch(
 			'https://www.hamburg.ccc.de/dooris/status.json',
 		);
-		statusCache = await response.json();
+		statusCache = await response.json() as DoorStatusResult;
 	}
 
 	return statusCache;

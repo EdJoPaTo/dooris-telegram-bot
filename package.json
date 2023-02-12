@@ -22,7 +22,6 @@
 	"xo": {
 		"rules": {
 			"@typescript-eslint/naming-convention": "off",
-			"@typescript-eslint/no-unsafe-assignment": "off",
 			"ava/no-ignored-test-files": "off",
 			"n/prefer-global/process": "off"
 		}
