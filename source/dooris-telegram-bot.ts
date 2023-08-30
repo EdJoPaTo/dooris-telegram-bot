@@ -1,3 +1,4 @@
+import {env} from 'node:process';
 import {Bot, InlineKeyboard} from 'grammy';
 import {generateUpdateMiddleware} from 'telegraf-middleware-console-time';
 import type {InlineQueryResultArticle} from 'grammy/types';
@@ -14,9 +15,7 @@ type DoorStatusResult = {
 	};
 };
 
-process.title = 'dooris-tgbot';
-
-const token = process.env['BOT_TOKEN'];
+const token = env['BOT_TOKEN'];
 if (!token) {
 	throw new Error(
 		'You have to provide the bot-token from @BotFather via environment variable (BOT_TOKEN)',
