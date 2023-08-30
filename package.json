@@ -17,7 +17,7 @@
 		"@sindresorhus/tsconfig": "^4.0.0",
 		"@types/node": "^18.6.2",
 		"typescript": "^5.0.2",
-		"xo": "^0.55.1"
+		"xo": "^0.56.0"
 	},
 	"xo": {
 		"rules": {
