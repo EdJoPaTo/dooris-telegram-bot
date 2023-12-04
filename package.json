@@ -2,8 +2,8 @@
 	"private": true,
 	"license": "MIT",
 	"scripts": {
-		"start": "tsc --sourceMap && node --enable-source-maps dist/dooris-telegram-bot.js",
-		"test": "tsc --sourceMap && xo"
+		"start": "tsc && node --enable-source-maps dist/dooris-telegram-bot.js",
+		"test": "tsc && xo"
 	},
 	"type": "module",
 	"engines": {
