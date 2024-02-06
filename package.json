@@ -1,4 +1,5 @@
 {
+	"name": "dooris-telegram-bot",
 	"private": true,
 	"license": "MIT",
 	"scripts": {
