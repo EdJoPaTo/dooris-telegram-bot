@@ -1,7 +1,7 @@
 import {env} from 'node:process';
 import {Bot, InlineKeyboard} from 'grammy';
-import {generateUpdateMiddleware} from 'telegraf-middleware-console-time';
 import type {InlineQueryResultArticle} from 'grammy/types';
+import {generateUpdateMiddleware} from 'telegraf-middleware-console-time';
 
 type DoorStatusResult = {
 	readonly state: {
@@ -77,6 +77,11 @@ bot.command('start', async ctx =>
 Benutze /door für den aktuellen Zustand.
 Wenn du Anderen den Zustand der Tür zeigen willst, schreibe in jedem beliebigen Telegram Chat \`@${username}\` und wähle den Türzustand. (Die Textzeile darf nichts anderes als \`@${username}\` beinhalten)`,
 		{parse_mode: 'Markdown'},
+	));
+
+bot.command('privacy', async ctx =>
+	ctx.reply(
+		'This bot is stateless. No stored data needed. See https://github.com/EdJoPaTo/dooris-telegram-bot',
 	));
 
 bot.command(
