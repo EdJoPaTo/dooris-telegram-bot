@@ -12,7 +12,7 @@
 	},
 	"dependencies": {
 		"grammy": "^1.32.0",
-		"telegraf-middleware-console-time": "^2.0.0"
+		"telegraf-middleware-console-time": "^3.0.0"
 	},
 	"devDependencies": {
 		"@sindresorhus/tsconfig": "^7.0.0",
