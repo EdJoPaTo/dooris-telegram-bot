@@ -17,9 +17,7 @@ type DoorStatusResult = {
 
 const token = env['BOT_TOKEN'];
 if (!token) {
-	throw new Error(
-		'You have to provide the bot-token from @BotFather via environment variable (BOT_TOKEN)',
-	);
+	throw new Error('You have to provide the bot-token from @BotFather via environment variable (BOT_TOKEN)');
 }
 
 const bot = new Bot(token);
@@ -30,12 +28,11 @@ let statusCache: DoorStatusResult;
 let statusTimestamp = 0;
 async function doorisStatus(): Promise<DoorStatusResult> {
 	const age = (Date.now() - statusTimestamp) / 1000;
-	if (age > 60) { // Older than 60 seconds
+	if (age > 60) {
+		// Older than 60 seconds
 		statusTimestamp = Date.now();
-		const response = await fetch(
-			'https://www.hamburg.ccc.de/dooris/status.json',
-		);
-		statusCache = await response.json() as DoorStatusResult;
+		const response = await fetch('https://www.hamburg.ccc.de/dooris/status.json');
+		statusCache = (await response.json()) as DoorStatusResult;
 	}
 
 	return statusCache;
@@ -54,7 +51,8 @@ function statusString(status: DoorStatusResult) {
 }
 
 function formatAge(ageInSeconds: number) {
-	if (ageInSeconds < 60 * 90) { // Less than 90 min
+	if (ageInSeconds < 60 * 90) {
+		// Less than 90 min
 		const minutes = Math.floor(ageInSeconds / 60);
 		if (minutes === 1) {
 			return 'einer Minute';
@@ -79,10 +77,11 @@ Wenn du Anderen den Zustand der Tür zeigen willst, schreibe in jedem beliebigen
 		{parse_mode: 'Markdown'},
 	));
 
-bot.command('privacy', async ctx =>
-	ctx.reply(
-		'This bot is stateless. No stored data needed. See https://github.com/EdJoPaTo/dooris-telegram-bot',
-	));
+bot.command(
+	'privacy',
+	async ctx =>
+		ctx.reply('This bot is stateless. No stored data needed. See https://github.com/EdJoPaTo/dooris-telegram-bot'),
+);
 
 bot.command(
 	'door',
@@ -137,9 +136,7 @@ bot.callbackQuery('update', async ctx => {
 });
 
 bot.on('channel_post', async ctx => {
-	await ctx.reply(
-		'Adding a random bot as an admin to your channel is maybe not the best idea…\n\nSincerely, a random bot, added as an admin to this channel.',
-	);
+	await ctx.reply('Adding a random bot as an admin to your channel is maybe not the best idea…\n\nSincerely, a random bot, added as an admin to this channel.');
 	console.log('leave the channel…', ctx.chat);
 	return ctx.leaveChat();
 });
