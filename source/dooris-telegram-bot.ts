@@ -31,7 +31,7 @@ async function doorisStatus(): Promise<DoorStatusResult> {
 	if (age > 60) {
 		// Older than 60 seconds
 		statusTimestamp = Date.now();
-		const response = await fetch('https://www.hamburg.ccc.de/dooris/status.json');
+		const response = await fetch('https://spaceapi.hamburg.ccc.de/');
 		statusCache = (await response.json()) as DoorStatusResult;
 	}
 
