@@ -3,11 +3,10 @@
 	// https://deno.land/manual/advanced/typescript/configuration
 	// https://www.typescriptlang.org/tsconfig/
 	"compilerOptions": {
-		"noImplicitOverride": true,
+		"erasableSyntaxOnly": true,
 		"noImplicitReturns": true,
 		"noPropertyAccessFromIndexSignature": true,
-		"noUncheckedIndexedAccess": true,
-		"useUnknownInCatchVariables": true
+		"noUncheckedIndexedAccess": true
 	},
 	"exclude": [
 		"./coverage/",
@@ -17,9 +16,17 @@
 	"fmt": {
 		"useTabs": true
 	},
+	"imports": {
+		"grammy": "npm:grammy@^1",
+		"telegraf-middleware-console-time": "npm:telegraf-middleware-console-time@^3"
+	},
 	"lint": {
 		"rules": {
 			// https://lint.deno.land/?all=on
+			"tags": [
+				"recommended",
+				"workspace"
+			],
 			"include": [
 				"camelcase",
 				"default-param-last",
@@ -27,17 +34,22 @@
 				"explicit-module-boundary-types",
 				"no-await-in-loop",
 				"no-eval",
+				"no-inferrable-types",
+				"no-node-globals",
 				"no-non-null-asserted-optional-chain",
 				"no-non-null-assertion",
+				"no-process-global",
+				"no-self-compare",
 				"no-slow-types",
 				"no-sparse-arrays",
+				"no-sync-fn-in-async-fn",
+				"no-undef",
+				"no-useless-rename",
+				"single-var-declarator",
+				"triple-slash-reference",
 				"verbatim-module-syntax"
 			]
 		}
-	},
-	"imports": {
-		"grammy": "npm:grammy@^1",
-		"telegraf-middleware-console-time": "npm:telegraf-middleware-console-time@^3"
 	},
 	"tasks": {
 	}
