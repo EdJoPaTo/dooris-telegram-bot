@@ -145,6 +145,14 @@ bot.on("channel_post", async (ctx) => {
 
 let username: string;
 
+await bot.api.setMyShortDescription(
+	"Finde den Zustand der CCCHH Tür heraus - Frag Dooris. Bot von @EdJoPaTo",
+);
+
+await bot.api.setMyDescription(`Finde den Zustand der CCCHH Tür heraus - Frag Dooris.
+
+Bot von @EdJoPaTo`);
+
 await bot.api.setMyCommands([
 	{ command: "door", description: "Zustand der Tür" },
 	{ command: "where", description: "Wo ist besagte Tür?" },
