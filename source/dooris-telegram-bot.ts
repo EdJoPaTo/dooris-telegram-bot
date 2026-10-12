@@ -1,4 +1,5 @@
 import { env } from "node:process";
+
 import { Bot, InlineKeyboard } from "grammy";
 import type { InlineQueryResultArticle } from "grammy/types";
 import { generateUpdateMiddleware } from "telegraf-middleware-console-time";
@@ -29,13 +30,12 @@ bot.use(generateUpdateMiddleware());
 let statusCache: DoorStatusResult;
 let statusTimestamp = 0;
 async function doorisStatus(): Promise<DoorStatusResult> {
-	const age = (Date.now() - statusTimestamp) / 1000;
-	if (age > 60) {
+	const ageMilliseconds = Date.now() - statusTimestamp;
+	const ageSeconds = ageMilliseconds / 1000;
+	if (ageSeconds > 60) {
 		// Older than 60 seconds
 		statusTimestamp = Date.now();
-		const response = await fetch(
-			"https://spaceapi.hamburg.ccc.de/",
-		);
+		const response = await fetch("https://spaceapi.hamburg.ccc.de/");
 		statusCache = (await response.json()) as DoorStatusResult;
 	}
 
@@ -44,8 +44,9 @@ async function doorisStatus(): Promise<DoorStatusResult> {
 
 function statusString(status: DoorStatusResult) {
 	const { open, lastchange } = status.state;
-	const age = (Date.now() / 1000) - lastchange;
-	const ageString = formatAge(age);
+	const nowSeconds = Date.now() / 1000;
+	const ageSeconds = nowSeconds - lastchange;
+	const ageString = formatAge(ageSeconds);
 
 	if (open) {
 		return `Die Tür ist seit ${ageString} offen. 🙃`;
@@ -79,20 +80,16 @@ bot.command("start", (ctx) =>
 Benutze /door für den aktuellen Zustand.
 Wenn du Anderen den Zustand der Tür zeigen willst, schreibe in jedem beliebigen Telegram Chat \`@${username}\` und wähle den Türzustand. (Die Textzeile darf nichts anderes als \`@${username}\` beinhalten)`,
 		{ parse_mode: "Markdown" },
-	));
-
-bot.command(
-	"privacy",
-	(ctx) =>
-		ctx.reply(
-			"This bot is stateless. No stored data needed. See https://github.com/EdJoPaTo/dooris-telegram-bot",
-		),
+	),
 );
 
-bot.command(
-	"door",
-	async (ctx) => ctx.reply(statusString(await doorisStatus())),
+bot.command("privacy", (ctx) =>
+	ctx.reply(
+		"This bot is stateless. No stored data needed. See https://github.com/EdJoPaTo/dooris-telegram-bot",
+	),
 );
+
+bot.command("door", async (ctx) => ctx.reply(statusString(await doorisStatus())));
 
 bot.command("where", async (ctx) => {
 	const status = await doorisStatus();
@@ -128,10 +125,7 @@ bot.callbackQuery("update", async (ctx) => {
 	try {
 		await ctx.editMessageText(text, { reply_markup: updateKeyboard });
 	} catch (error: unknown) {
-		if (
-			error instanceof Error &&
-			error.message.includes("message is not modified")
-		) {
+		if (error instanceof Error && error.message.includes("message is not modified")) {
 			// Ignore
 		} else {
 			throw error;

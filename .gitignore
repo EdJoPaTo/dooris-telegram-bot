@@ -1,4 +1,4 @@
-.vscode
-coverage
-docs
 node_modules
+
+# botfiles
+persist

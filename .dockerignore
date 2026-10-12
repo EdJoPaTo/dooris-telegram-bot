@@ -2,9 +2,12 @@
 *.md
 **/*.test.*
 **/test.*
-coverage
 Dockerfile
-docs
 node_modules
+test
+tsconfig.json
 
 botfather-settings
+
+# botfiles
+persist
