@@ -107,9 +107,7 @@ bot.on("inline_query", async (ctx) => {
 		type: "article",
 		id: String(status.state.open),
 		title: `Die Tür ist ${status.state.open ? "offen" : "zu"}`,
-		input_message_content: {
-			message_text: statusString(status),
-		},
+		input_message_content: { message_text: statusString(status) },
 		reply_markup: updateKeyboard,
 	});
 
